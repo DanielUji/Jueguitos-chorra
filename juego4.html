@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ej4</title>
+</head>
+
+<body>
+    <style>
+        .contenedor {
+            margin: auto;
+            text-align: center;
+        }
+
+        #sketchpad{
+            width:600px;
+            height:500px;
+            background-color: rgb(107, 238, 255);
+        }
+    </style>
+    <!-- Contenedor -->
+    <div class="contenedor">
+        <h1>Juego Ej4</h1>
+        <hr>
+        <h3>Score globos: <span id="contador_score"></span></h3>
+        <canvas id="sketchpad" width="600px" height="500px"></canvas>
+        <p>
+            <h2 id="reiniciar"> Reiniciar juego </h2>
+        </p>
+    </div>  
+    <script>
+        
+//Script para Ejercicio 4
+function getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: evt.clientX  - rect.left,
+        y: evt.clientY - rect.top,
+    };
+}
+
+function drawBall(x, y, radius) {
+    context.beginPath();
+    context.arc(x, y, radius, 0, Math.PI * 2);
+    context.fillStyle = 'blue';
+    context.fill();
+    context.closePath();
+}
+
+function spawnBall() {
+    if(!fin_juego){
+        const radius = 20;
+        const x = Math.random() * (canvas.width - 2 * radius) + radius;
+        const y = Math.random() * (canvas.height - 2 * radius) + radius;
+        balls.push({ x, y, radius });
+    }
+    
+}
+
+function draw() {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (const ball of balls) {
+        drawBall(ball.x, ball.y, ball.radius);
+    }
+}
+
+function limpiar(canvas) {
+    var context = canvas.getContext("2d");
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    contador_globos = 0
+    contador.textContent = contador_globos
+    balls = []
+    fin_juego = false
+}
+
+function clickHandler(event) {
+    coors = getMousePos(canvas, event);
+    const mouseX = coors.x;
+    const mouseY = coors.y;
+
+    for (let i = balls.length - 1; i >= 0; i--) {
+        const ball = balls[i];
+        const distance = Math.sqrt((mouseX - ball.x) ** 2 + (mouseY - ball.y) ** 2);
+
+        if (distance <= ball.radius) {
+            balls.splice(i, 1);
+            contador_globos++
+            contador.textContent = contador_globos
+            break;
+        }
+    }
+}
+
+function comprobar_victoria(){
+    if(contador_globos >= 10 && !fin_juego){
+        alert("Has ganado!!")
+        fin_juego = true
+    }else{
+        if(balls.length > 5 && !fin_juego){
+            alert("Has perdido!!")
+            fin_juego = true
+        }
+    }
+}
+
+// 
+function ready() {
+    canvas.addEventListener('click', clickHandler);
+
+    document.querySelector("#reiniciar").addEventListener("click", function () {
+        alert("El juego se esta reiniciando...")
+        limpiar(canvas);
+    });
+
+    setInterval(() => {spawnBall()}, 333);
+    setInterval(() => {draw()}, 16);
+    setInterval(() => {comprobar_victoria()},500)
+}
+
+
+
+
+
+
+const canvas = document.getElementById('sketchpad');
+const context = canvas.getContext('2d');
+
+var balls = [];
+var contador = document.getElementById("contador_score");
+var contador_globos = 0
+contador.textContent = contador_globos
+var fin_juego = false
+ready()
+    </script>
+</body>
+
+</html>
