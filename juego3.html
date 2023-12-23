@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ej3-Paso3</title>
+</head>
+
+<body>
+    <style>
+        .contenedor {
+            margin: auto;
+            text-align: center;
+        }
+
+        #sketchpad{
+            width:600px;
+            height:500px;
+            background-color: rgb(107, 238, 255);
+        }
+    </style>
+    <!-- Contenedor -->
+    <div class="contenedor">
+        <h1>Juego Ej3</h1>
+        <hr>
+        <h3>Contador de cuadrados: <span id="contador"></span></h3>
+        <canvas id="sketchpad" width="600px" height="500px"></canvas>
+        <p>
+            <h2 id="reiniciar"> Reiniciar juego </h2>
+        </p>
+    </div>  
+    
+</body>
+<script>
+    //Script para Ejercicio 3 - Paso 3
+function getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: evt.clientX  - rect.left,
+        y: evt.clientY - rect.top,
+    };
+}
+
+
+function dibuja(context) {
+    context.fillStyle = "rgb(0,140,0)";
+    context.fillRect(20, 10, 40, 40);
+}
+
+function dibujaEnRaton(context, coors) {
+    //Obtengo un valor random de tamaño, maximo 100x100px 
+    var random_size = Math.floor(Math.random() * 500);
+    if(!fin_juego){
+        if (comprobar_color_pos(context, coors, random_size)){
+            context.fillStyle = "rgb(0,140,0)";
+            contador_cuadrados++
+            contador.textContent = contador_cuadrados
+            comprobar_victoria()
+        }else{
+            context.fillStyle = "rgb(140,0,0)";
+        }
+        context.fillRect(coors.x, coors.y, random_size, random_size);
+    }
+}
+
+function limpiar(context, canvas) {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    contador_cuadrados = 0
+    contador.textContent = contador_cuadrados
+    fin_juego = false
+}
+
+function comprobar_color_pos(context, coors, size){
+
+    // Compruebo las posiciones para ver sus colores
+    for (let i = coors.x; i < coors.x + size; i++) {
+        for (let j = coors.y; j < coors.y + size; j++) {
+            var pixelData = context.getImageData(i, j, 1, 1).data; 
+            if(pixelData[1] == 140){
+                alert("Has perdido!")
+                fin_juego = true
+                return false
+            }
+        }
+    }
+
+    return true
+}
+
+function comprobar_victoria(){
+    if(contador_cuadrados >= 10){
+        alert("Has Ganado!!")
+        fin_juego = true
+    }
+}
+
+function activarCanvas() {
+    contador.textContent = 0
+    var canvas = document.querySelector("#sketchpad");
+    var context = canvas.getContext("2d");
+    canvas.addEventListener("click", function (evt) {
+        coors = getMousePos(canvas, evt);
+        dibujaEnRaton(context, coors);
+    });
+
+    document.querySelector("#reiniciar").addEventListener("click", function () {
+        alert("El juego se esta reiniciando...")
+        limpiar(context, canvas);
+    });
+
+}
+
+function ready() {
+    activarCanvas();
+}
+
+// -------------------------
+var contador_cuadrados = 0
+var contador = document.getElementById("contador");
+var fin_juego = false
+ready();
+</script>
+
+</html>
