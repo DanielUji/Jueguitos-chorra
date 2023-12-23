@@ -95,11 +95,11 @@ function clickHandler(event) {
 }
 
 function comprobar_victoria(){
-    if(contador_globos >= 10 && !fin_juego){
+    if(contador_globos >= 100 && !fin_juego){
         alert("Has ganado!!")
         fin_juego = true
     }else{
-        if(balls.length > 5 && !fin_juego){
+        if(balls.length > 10 && !fin_juego){
             alert("Has perdido!!")
             fin_juego = true
         }
