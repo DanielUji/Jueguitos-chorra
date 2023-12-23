@@ -23,6 +23,7 @@
     <!-- Contenedor -->
     <div class="contenedor">
         <h1>Juego Ej3</h1>
+        <h2>Has ganado: <span id="partidas">0</span> partidas</h2>
         <hr>
         <h3>Contador de cuadrados: <span id="contador"></span></h3>
         <canvas id="sketchpad" width="600px" height="500px"></canvas>
@@ -91,6 +92,7 @@ function comprobar_color_pos(context, coors, size){
 function comprobar_victoria(){
     if(contador_cuadrados >= 10){
         alert("Has Ganado!!")
+        part_ganadas = part_ganadas +1
         fin_juego = true
     }
 }
@@ -119,6 +121,7 @@ function ready() {
 var contador_cuadrados = 0
 var contador = document.getElementById("contador");
 var fin_juego = false
+let part_ganadas = document.getElementById("partidas")
 ready();
 </script>
 
